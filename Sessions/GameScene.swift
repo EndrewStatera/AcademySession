@@ -34,6 +34,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func sceneDidLoad() {
         
         let background = SKSpriteNode(imageNamed: "Lane.png")
+        background.name = "background"
         background.zPosition = -1
         background.size = self.size
         addChild(background)
@@ -146,13 +147,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         isUserInteractionEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             for node in self.children {
-                if node.name == "scoreLabel" {continue}
+                if node.name == "scoreLabel" || node.name == "background" {continue}
                 
                 node.removeFromParent()
             }
         }
         
-        scoreLabel.removeFromParent()
+//        scoreLabel.removeFromParent()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             if let scene = GameScene(fileNamed: "GameScene") {
