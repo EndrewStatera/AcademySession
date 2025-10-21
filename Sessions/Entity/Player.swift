@@ -18,8 +18,11 @@ class Player: GKEntity {
     
     override init() {
         
-        let node = SKSpriteNode(color: .blue, size: self.size)
+        let node = SKSpriteNode(imageNamed: "player.png")
         node.name = "Player"
+        node.setScale(5)
+        node.texture?.filteringMode = .nearest
+        node.position.y = -400
         self.node = node
         
         super.init()
@@ -32,10 +35,8 @@ class Player: GKEntity {
         
         node.physicsBody = SKPhysicsBody(rectangleOf: self.size)
         node.physicsBody?.affectedByGravity = false
-        node.physicsBody?.isDynamic = false
+        node.physicsBody?.isDynamic = true
         node.physicsBody?.categoryBitMask = PhysicsCategory.player
-        //node.physicsBody?.contactTestBitMask = PhysicsCategory.ball
-        //node.physicsBody?.collisionBitMask = PhysicsCategory.ball
         node.physicsBody?.contactTestBitMask = PhysicsCategory.ball
     }
     

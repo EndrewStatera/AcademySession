@@ -19,12 +19,14 @@ class Ball: GKEntity {
     override init() {
         super.init()
         
-        let node = SKSpriteNode(color: .red, size: size)
+        let node = SKSpriteNode(imageNamed: "BallSpritesheet1.png")
         node.name = "Ball"
+        node.setScale(5)
+        node.texture?.filteringMode = .nearest
         
         //node.anchorPoint.y = -30
         //node.anchorPoint.x = randomX()
-        node.position = CGPoint(x: randomX(), y: 600)
+        node.position = CGPoint(x: randomX(), y: 800)
         self.addComponent(GKSKNodeComponent(node: node))
 
         let movement = MovementComponent(speed: 5)
@@ -36,7 +38,6 @@ class Ball: GKEntity {
         node.physicsBody?.affectedByGravity = true
         node.physicsBody?.isDynamic = true
         node.physicsBody?.categoryBitMask = PhysicsCategory.ball
-        //node.physicsBody?.collisionBitMask = PhysicsCategory.player
         node.physicsBody?.contactTestBitMask = PhysicsCategory.player
 
     }

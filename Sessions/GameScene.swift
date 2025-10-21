@@ -15,12 +15,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var player: Player?
     private var balls: [Ball] = []
     private var dropNewBallTime: TimeInterval = 0
-    var livesLabel: SKLabelNode!
+    var scoreLabel: SKLabelNode!
+    var isGameOver = false {
+        didSet {
+            gameOver()
+        }
+     }
     
-    var lives: Int = 5
+    var score: Int = 0
     {
         didSet {
-            livesLabel.text = "Lives: \(lives)"
+            scoreLabel.text = "Score: \(score)"
         }
     }
     
@@ -40,14 +45,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let ball = Ball()
         entityManager!.add(ball)
         
-        self.livesLabel = SKLabelNode(fontNamed: "AmericanTypeWriter-CondensedLight")
-        livesLabel.fontColor = .white
-        livesLabel.fontSize = 50
-        livesLabel.position.y = 300
-        livesLabel.name = "livesLabel"
-        addChild(livesLabel)
+        self.scoreLabel = SKLabelNode(fontNamed: "AmericanTypeWriter-CondensedBold")
+        scoreLabel.fontColor = .white
+        scoreLabel.fontSize = 60
+        scoreLabel.position.y = 500
+        scoreLabel.name = "scoreLabel"
+        addChild(scoreLabel)
         
-        lives = 5
+        score = 0
         balls.append(ball)
         
     }
@@ -80,7 +85,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         
-        if currentTime - dropNewBallTime > 1 {
+        if currentTime - dropNewBallTime > 1 && !self.isGameOver {
             let ball = Ball()
             entityManager!.add(ball)
             balls.append(ball)
@@ -88,12 +93,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         for node in children {
-            if node.position.y < -1400 {
+            if node.position.y < -850 {
                 node.removeFromParent()
-            }
-            
-            if node.name == "Ball" && self.player!.node.position.y == node.position.y && self.player!.node.position.y == node.position.x {
-                //lives = lives
+                self.score += 1
             }
         }
         
@@ -123,30 +125,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        //        let spriteA = contact.bodyA.node as! SKSpriteNode
-        //        let spriteB = contact.bodyB.node as! SKSpriteNode
         
         let spriteA = contact.bodyA.node
         let spriteB = contact.bodyB.node
-        print("Collision \(spriteA?.name) and \(spriteB?.name)")
         if spriteA?.name == "Player" {
             if spriteB?.name == "Ball" {
-                self.lives -= 1
-                spriteB?.removeFromParent()
+                self.isGameOver.toggle()
             }
-            if spriteB?.name == "playerBullet" {
-                spriteB?.removeFromParent()
-            }
-            if spriteB?.name == "enemyBullet" {
-                spriteB?.removeFromParent()
+        }
+    }
+    
+    func gameOver() {
+        isUserInteractionEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            for node in self.children {
+                if node.name == "scoreLabel" {continue}
+                
+                node.removeFromParent()
             }
         }
         
-        //        let categories = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
-        //
-        //            if categories == PhysicsCategory.player | PhysicsCategory.ball {
-        //                print("💥 Player hit ball!")
-        //                lives -= 1
-        //            }
+        scoreLabel.removeFromParent()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            if let scene = GameScene(fileNamed: "GameScene") {
+                scene.scaleMode = .aspectFill
+                
+                self.view?.presentScene(scene, transition: .fade(withDuration: 1.0))
+            }
+        }
     }
 }
