@@ -47,8 +47,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         entityManager!.add(player)
         self.lastUpdateTime = 0
         
-        let ball = Ball()
-        entityManager!.add(ball)
         
         self.scoreLabel = SKLabelNode(fontNamed: "AmericanTypeWriter-CondensedBold")
         scoreLabel.fontColor = .white
@@ -61,7 +59,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         score = 0
-        balls.append(ball)
         
     }
     
