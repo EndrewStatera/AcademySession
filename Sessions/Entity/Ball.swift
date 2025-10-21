@@ -19,7 +19,7 @@ class Ball: GKEntity {
     override init() {
         super.init()
         
-        let node = SKSpriteNode(imageNamed: "BallSpritesheet1.png")
+        let node = SKSpriteNode(imageNamed: "Ball1.png")
         node.name = "Ball"
         node.setScale(5)
         node.texture?.filteringMode = .nearest
@@ -29,7 +29,7 @@ class Ball: GKEntity {
         node.position = CGPoint(x: randomX(), y: 800)
         self.addComponent(GKSKNodeComponent(node: node))
 
-        let animationComp = AnimationComponent(idleAction: .repeatForever(.animate(with: Array.init(withFormat: "BallSpritesheet%@.png", range: 1...9), timePerFrame: 0.1)), spinAction: .repeatForever(.animate(with: .init(withFormat: "Ball%@.png", range: 1...9), timePerFrame: 0.1)))
+        let animationComp = AnimationComponent(idleAction: .repeatForever(.animate(with: Array.init(withFormat: "Ball%@.png", range: 1...9), timePerFrame: 0.1)), spinAction: .repeatForever(.animate(with: .init(withFormat: "Ball%@.png", range: 1...9), timePerFrame: 0.1)))
         self.addComponent(animationComp)
 
         let movement = MovementComponent(speed: 5)

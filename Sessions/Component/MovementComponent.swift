@@ -27,6 +27,7 @@ class MovementComponent: GKComponent {
     }
     
     override func update(deltaTime seconds: TimeInterval) {
+        
         node?.position.x += direction.rawValue * speed
     }
     
