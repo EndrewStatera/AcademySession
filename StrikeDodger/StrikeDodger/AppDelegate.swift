@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  Sessions
+//  StrikeDodger
 //
-//  Created by Endrew Soares on 20/10/25.
+//  Created by João Pedro Teixeira de Carvalho on 21/10/25.
 //
 
 import UIKit

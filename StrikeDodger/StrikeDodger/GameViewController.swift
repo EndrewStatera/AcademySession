@@ -1,8 +1,8 @@
 //
 //  GameViewController.swift
-//  Sessions
+//  StrikeDodger
 //
-//  Created by Endrew Soares on 20/10/25.
+//  Created by João Pedro Teixeira de Carvalho on 21/10/25.
 //
 
 import UIKit
@@ -22,7 +22,7 @@ class GameViewController: UIViewController {
             if let sceneNode = scene.rootNode as! GameScene? {
                 
                 // Copy gameplay related content over to the scene
-     
+
                 
                 // Set the scale mode to scale to fit the window
                 sceneNode.scaleMode = .aspectFill
