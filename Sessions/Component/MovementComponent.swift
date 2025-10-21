@@ -6,6 +6,7 @@
 //
 
 import GameplayKit
+import Foundation
 
 class MovementComponent: GKComponent {
     
@@ -13,6 +14,9 @@ class MovementComponent: GKComponent {
     var node: SKNode?
     var direction: Direction = .idle
     
+    var minX: CGFloat = 0
+    var maxX: CGFloat = 0
+
     init(speed: CGFloat) {
         self.speed = speed
         super.init()

@@ -29,6 +29,9 @@ class Ball: GKEntity {
         node.position = CGPoint(x: randomX(), y: 800)
         self.addComponent(GKSKNodeComponent(node: node))
 
+        let animationComp = AnimationComponent(idleAction: .repeatForever(.animate(with: Array.init(withFormat: "BallSpritesheet%@.png", range: 1...9), timePerFrame: 0.1)), spinAction: .repeatForever(.animate(with: .init(withFormat: "Ball%@.png", range: 1...9), timePerFrame: 0.1)))
+        self.addComponent(animationComp)
+
         let movement = MovementComponent(speed: 5)
         self.addComponent(movement)
 
@@ -42,7 +45,7 @@ class Ball: GKEntity {
 
     }
     func randomX() -> CGFloat {
-        CGFloat.random(in: -300...300)
+        CGFloat.random(in: -250...250)
     }
     
     

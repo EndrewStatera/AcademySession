@@ -33,8 +33,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func sceneDidLoad() {
         
-        //physicsWorld.contactDelegate = self
+        let background = SKSpriteNode(imageNamed: "Lane.png")
+        background.zPosition = -1
+        background.size = self.size
+        addChild(background)
         
+            
         self.entityManager = EntityManager(scene: self)
         let player = Player()
         self.player = player
@@ -50,6 +54,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.fontSize = 60
         scoreLabel.position.y = 500
         scoreLabel.name = "scoreLabel"
+        scoreLabel.fontColor = .black
+
         addChild(scoreLabel)
         
         score = 0
