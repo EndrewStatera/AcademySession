@@ -58,6 +58,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         addChild(scoreLabel)
         
+        
         score = 0
         balls.append(ball)
         
