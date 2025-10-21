@@ -22,8 +22,9 @@ class Ball: GKEntity {
         let node = SKSpriteNode(color: .red, size: size)
         node.name = "Ball"
         
-        node.anchorPoint.y = -30
-        node.anchorPoint.x = randomX()
+        //node.anchorPoint.y = -30
+        //node.anchorPoint.x = randomX()
+        node.position = CGPoint(x: randomX(), y: 600)
         self.addComponent(GKSKNodeComponent(node: node))
 
         let movement = MovementComponent(speed: 5)
@@ -32,11 +33,15 @@ class Ball: GKEntity {
         movement.node = node
 
         node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
-        //node.physicsBody?.isDynamic = true
-        
+        node.physicsBody?.affectedByGravity = true
+        node.physicsBody?.isDynamic = true
+        node.physicsBody?.categoryBitMask = PhysicsCategory.ball
+        //node.physicsBody?.collisionBitMask = PhysicsCategory.player
+        node.physicsBody?.contactTestBitMask = PhysicsCategory.player
+
     }
     func randomX() -> CGFloat {
-        CGFloat.random(in: -12...12)
+        CGFloat.random(in: -300...300)
     }
     
     

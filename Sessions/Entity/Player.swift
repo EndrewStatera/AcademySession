@@ -10,6 +10,7 @@ import SpriteKit
 class Player: GKEntity {
     
     var node: SKNode
+    var size: CGSize = CGSize(width: 20, height: 20)
     
     var movement: MovementComponent? {
         return self.component(ofType: MovementComponent.self)
@@ -17,7 +18,7 @@ class Player: GKEntity {
     
     override init() {
         
-        let node = SKSpriteNode(color: .blue, size: CGSize(width: 20, height: 20))
+        let node = SKSpriteNode(color: .blue, size: self.size)
         node.name = "Player"
         self.node = node
         
@@ -28,8 +29,14 @@ class Player: GKEntity {
         self.addComponent(movement)
 
         movement.node = node
-
         
+        node.physicsBody = SKPhysicsBody(rectangleOf: self.size)
+        node.physicsBody?.affectedByGravity = false
+        node.physicsBody?.isDynamic = false
+        node.physicsBody?.categoryBitMask = PhysicsCategory.player
+        //node.physicsBody?.contactTestBitMask = PhysicsCategory.ball
+        //node.physicsBody?.collisionBitMask = PhysicsCategory.ball
+        node.physicsBody?.contactTestBitMask = PhysicsCategory.ball
     }
     
     required init?(coder aDecoder: NSCoder) {

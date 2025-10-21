@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     private var lastUpdateTime : TimeInterval = 0
     private var entityManager: EntityManager?
@@ -23,10 +23,12 @@ class GameScene: SKScene {
             livesLabel.text = "Lives: \(lives)"
         }
     }
-
+    
     
     
     override func sceneDidLoad() {
+        
+        //physicsWorld.contactDelegate = self
         
         self.entityManager = EntityManager(scene: self)
         let player = Player()
@@ -45,8 +47,9 @@ class GameScene: SKScene {
         livesLabel.name = "livesLabel"
         addChild(livesLabel)
         
+        lives = 5
         balls.append(ball)
-
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -68,7 +71,7 @@ class GameScene: SKScene {
         if (self.lastUpdateTime == 0) {
             self.lastUpdateTime = currentTime
         }
-
+        
         // Calculate time since last update
         let dt = currentTime - self.lastUpdateTime
         if let entities = entityManager?.entities {
@@ -89,8 +92,8 @@ class GameScene: SKScene {
                 node.removeFromParent()
             }
             
-            if node.name == "Ball" && self.player!.node.position.y == node.position.y && self.player!.node.position.x == node.position.x {
-                lives -= 1
+            if node.name == "Ball" && self.player!.node.position.y == node.position.y && self.player!.node.position.y == node.position.x {
+                //lives = lives
             }
         }
         
@@ -101,6 +104,7 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         physicsWorld.gravity = CGVector(dx: 0, dy: -0.8)
+        physicsWorld.contactDelegate = self
     }
     
     func captureInput(_ touches: Set<UITouch>) {
@@ -118,4 +122,31 @@ class GameScene: SKScene {
         CGFloat.random(in: -self.size.width/2...self.size.width/2)
     }
     
+    func didBegin(_ contact: SKPhysicsContact) {
+        //        let spriteA = contact.bodyA.node as! SKSpriteNode
+        //        let spriteB = contact.bodyB.node as! SKSpriteNode
+        
+        let spriteA = contact.bodyA.node
+        let spriteB = contact.bodyB.node
+        print("Collision \(spriteA?.name) and \(spriteB?.name)")
+        if spriteA?.name == "Player" {
+            if spriteB?.name == "Ball" {
+                self.lives -= 1
+                spriteB?.removeFromParent()
+            }
+            if spriteB?.name == "playerBullet" {
+                spriteB?.removeFromParent()
+            }
+            if spriteB?.name == "enemyBullet" {
+                spriteB?.removeFromParent()
+            }
+        }
+        
+        //        let categories = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        //
+        //            if categories == PhysicsCategory.player | PhysicsCategory.ball {
+        //                print("💥 Player hit ball!")
+        //                lives -= 1
+        //            }
+    }
 }
