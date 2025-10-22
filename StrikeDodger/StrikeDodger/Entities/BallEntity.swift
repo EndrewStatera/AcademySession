@@ -10,22 +10,30 @@ import SpriteKit
 
 class BallEntity: GKEntity {
     
+    let size: CGSize = .init(width: 20, height: 20)
+
     override init() {
         super.init()
         
-        let node = SKSpriteNode(color: .red, size: CGSize(width: 50, height: 50 ))
+        let node = SKSpriteNode(imageNamed: "Ball1")
         node.position = CGPoint(x: randomX(), y: 800)
         
         node.name = "ball"
+        node.texture?.filteringMode = .nearest
         
-        node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
+        node.physicsBody = SKPhysicsBody(rectangleOf: size)
         node.physicsBody?.isDynamic = true
         node.physicsBody?.affectedByGravity = true
         node.physicsBody?.categoryBitMask = PhysicsCategory.ball
         node.physicsBody?.contactTestBitMask = PhysicsCategory.player
         
-        self.addComponent(GKSKNodeComponent(node: node))
+        node.setScale(5)
 
+        
+        self.addComponent(GKSKNodeComponent(node: node))
+        
+        let animationComponent = AnimationComponent(spinAction: .repeatForever(.animate(with: Array.init(withFormat: "Ball%@.png", range: 1...9), timePerFrame: 0.1)))
+        self.addComponent(animationComponent)
     }
     
     required init?(coder: NSCoder) {

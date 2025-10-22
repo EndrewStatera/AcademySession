@@ -14,11 +14,13 @@ class PlayerEntity: GKEntity {
     var movementComponent: MovementComponent? {
         self.component(ofType: MovementComponent.self)
     }
+    var size: CGSize = CGSize(width: 20, height: 20)
     
     override init() {
         super.init()
         
-        let node = SKSpriteNode(color: .blue, size: .init(width: 100, height: 100))
+        let node = SKSpriteNode(imageNamed: "player")
+        node.texture?.filteringMode = .nearest
         node.position.y = -300
         self.addComponent(GKSKNodeComponent(node: node))
         
@@ -27,11 +29,13 @@ class PlayerEntity: GKEntity {
         
         node.name = "player"
         
-        node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
+        node.physicsBody = SKPhysicsBody(rectangleOf: self.size)
         node.physicsBody?.affectedByGravity = false
         node.physicsBody?.isDynamic = true
         node.physicsBody?.categoryBitMask = PhysicsCategory.player
         node.physicsBody?.collisionBitMask = PhysicsCategory.ball
+        
+        node.setScale(5)
         
     }
     

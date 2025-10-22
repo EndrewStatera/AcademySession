@@ -36,6 +36,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.name = "background"
         background.zPosition = -1
         background.size = self.size
+        self.background.texture?.filteringMode = .nearest
         addChild(background)
         
         let playerEntity = PlayerEntity()
