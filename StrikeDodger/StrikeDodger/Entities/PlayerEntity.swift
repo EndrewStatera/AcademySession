@@ -24,6 +24,15 @@ class PlayerEntity: GKEntity {
         
         let movementComponent = MovementComponent(speed: 5)
         self.addComponent(movementComponent)
+        
+        node.name = "player"
+        
+        node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
+        node.physicsBody?.affectedByGravity = false
+        node.physicsBody?.isDynamic = true
+        node.physicsBody?.categoryBitMask = PhysicsCategory.player
+        node.physicsBody?.collisionBitMask = PhysicsCategory.ball
+        
     }
     
     required init?(coder: NSCoder) {

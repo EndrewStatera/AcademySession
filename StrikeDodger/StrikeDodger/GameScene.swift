@@ -12,19 +12,44 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var lastUpdateTime : TimeInterval = 0
     private var dropBallTime: TimeInterval = 0
     
-    var entityManager: EntityManager?
-    var playerEntity: PlayerEntity?
+    private var entityManager: EntityManager?
+    private var background: SKSpriteNode!
+    private var playerEntity: PlayerEntity?
+    private var scoreLabel: SKLabelNode!
     
+    private var isGameOver: Bool = false {
+        didSet {
+            gameOver()
+        }
+    }
+    
+    private var score: Int = 0 {
+        didSet {
+            self.scoreLabel?.text = "Score: \(score)"
+        }
+    }
+
     override func sceneDidLoad() {
         self.entityManager = EntityManager(scene: self)
+        
+        self.background = SKSpriteNode(imageNamed: "Lane.png")
+        background.name = "background"
+        background.zPosition = -1
+        background.size = self.size
+        addChild(background)
         
         let playerEntity = PlayerEntity()
         self.playerEntity = playerEntity
         entityManager?.add(entity: playerEntity)
         
-        let ball = BallEntity()
-        entityManager?.add(entity: ball)
+        self.scoreLabel = SKLabelNode(fontNamed: "AmericanTypeWriter-CondensedBold")
+        scoreLabel.fontColor = .black
+        scoreLabel.fontSize = 60
+        scoreLabel.position.y = 500
+        scoreLabel.name = "scoreLabel"
+        addChild(scoreLabel)
         
+        self.score = 0
         
     }
     
@@ -53,7 +78,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.lastUpdateTime = currentTime
         }
         
-        if (currentTime - self.dropBallTime > 1) {
+        if currentTime - self.dropBallTime > 1 && !self.isGameOver {
             let ball = BallEntity()
             self.entityManager?.add(entity: ball)
             dropBallTime = currentTime
@@ -69,6 +94,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         
+        for node in children {
+            if node.position.y < -850 {
+                node.removeFromParent()
+                self.score += 1
+            }
+        }
         
         self.lastUpdateTime = currentTime
     }
@@ -83,5 +114,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 playerEntity?.movementComponent?.change(direction: .left)
             }
         }
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        let spriteA = contact.bodyA.node
+        let spriteB = contact.bodyB.node
+        
+        print("spriteA = \(String(describing: spriteA?.name)) || spriteB = \(String(describing: spriteB?.name))")
+        if spriteA?.name == "player" {
+            if spriteB?.name == "ball" {
+                print("Houve colisão!!!")
+                self.isGameOver.toggle()
+            }
+        }
+    }
+    
+    func gameOver() {
+        isUserInteractionEnabled = false
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            for node in self.children {
+                if node.name == "scoreLabel" || node.name == "background" {continue}
+                
+                node.removeFromParent()
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            if let scene = GameScene(fileNamed: "GameScene") {
+                scene.scaleMode = .aspectFill
+                
+                self.view?.presentScene(scene, transition: .fade(withDuration: 1.0))
+            }
+        }
+        
     }
 }
