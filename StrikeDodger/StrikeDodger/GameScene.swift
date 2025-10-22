@@ -8,11 +8,11 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     private var lastUpdateTime : TimeInterval = 0
+    private var dropBallTime: TimeInterval = 0
     
     var entityManager: EntityManager?
-    
     var playerEntity: PlayerEntity?
     
     override func sceneDidLoad() {
@@ -21,7 +21,17 @@ class GameScene: SKScene {
         let playerEntity = PlayerEntity()
         self.playerEntity = playerEntity
         entityManager?.add(entity: playerEntity)
+        
+        let ball = BallEntity()
+        entityManager?.add(entity: ball)
+        
+        
     }
+    
+    override func didMove(to view: SKView) {
+           physicsWorld.gravity = CGVector(dx: 0, dy: -0.8)
+           physicsWorld.contactDelegate = self
+       }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         captureInput(touches)
@@ -43,6 +53,12 @@ class GameScene: SKScene {
             self.lastUpdateTime = currentTime
         }
         
+        if (currentTime - self.dropBallTime > 1) {
+            let ball = BallEntity()
+            self.entityManager?.add(entity: ball)
+            dropBallTime = currentTime
+        }
+        
         // Calculate time since last update
         let dt = currentTime - self.lastUpdateTime
         
@@ -52,6 +68,7 @@ class GameScene: SKScene {
                 entity.update(deltaTime: dt)
             }
         }
+        
         
         self.lastUpdateTime = currentTime
     }
